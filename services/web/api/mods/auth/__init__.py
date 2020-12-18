@@ -11,12 +11,9 @@ import json
 from flask_restful import Resource, Api
 from flask_jwt_extended import create_access_token
 from api.mods.users.models.user_model import UserModel, user_schema
-from utils.errors import SchemaValidationError, EmailAlreadyExistsError, UnauthorizedError, \
-InternalServerError
+from utils.errors import errors
 from flask_bcrypt import check_password_hash
 from sqlalchemy.exc import IntegrityError
-
-
 
 
 class SignupApi(Resource):
@@ -32,14 +29,11 @@ class SignupApi(Resource):
                 db.session.commit()
                 return user_schema.dump([new_user]), 200
             else:
-                raise SchemaValidationError
-
+                return jsonify(errors["SchemaValidationError"])
         except IntegrityError:
-            raise SchemaValidationError
-        except NotUniqueError:
-            raise EmailAlreadyExistsError
+            return jsonify(errors["EmailAlreadyExistsError"])
         except Exception as e:
-            raise InternalServerError
+            return jsonify(errors["InternalServerError"])
 
 class LoginApi(Resource):
     def post(self):
@@ -53,15 +47,15 @@ class LoginApi(Resource):
 
                 authorized = check_password_hash(user.password,request.json['password'])
                 if not authorized:
-                    raise UnauthorizedError
+                    return jsonify(errors["UnauthorizedError"])
 
                 expires = datetime.timedelta(days=7)
                 access_token = create_access_token(identity=str(user.id), expires_delta=expires)
                 return {'token': access_token}, 200
             else:
-                raise UnauthorizedError
+                return jsonify(errors["UnauthorizedError"])
 
-        except UnauthorizedError:
-            raise UnauthorizedError
+        # except UnauthorizedError:
+        #     return jsonify(errors["UnauthorizedError"])
         except Exception as e:
-            raise InternalServerError
+            return jsonify(errors["InternalServerError"])
