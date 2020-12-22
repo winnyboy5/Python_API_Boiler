@@ -1,18 +1,13 @@
-import json
-
-
 from flask import (
-    Flask, 
-    request, 
-    jsonify,
-    Response
+    request
 )
-from flask_restful import Resource, Api
+from flask_restful import Resource
 from api import db
-from api.mods.users.models.user_model import UserModel, user_schema
+from mods.users.models.user_model import UserModel, user_schema
 
 
 users = {}
+
 
 class UserListResource(Resource):
     def get(self):

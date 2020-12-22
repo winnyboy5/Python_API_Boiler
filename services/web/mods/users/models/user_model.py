@@ -1,6 +1,4 @@
-import os
-
-from api import app, db, ma
+from api import db, ma
 from utils.db_utils import db_timestamp
 from flask_bcrypt import generate_password_hash, check_password_hash
 
@@ -23,9 +21,10 @@ class UserModel(db.Model):
     def check_password(self, password):
         return check_password_hash(self.password, password)
 
+
 class UserSchema(ma.Schema):
     class Meta:
-        fields = ("id", "email", "phone","active","created_at","updated_at")
+        fields = ("id", "email", "phone", "active", "created_at", "updated_at")
 
 
 user_schema = UserSchema()

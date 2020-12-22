@@ -1,17 +1,15 @@
 from flask import (
-    request, 
-    Response,
+    request,
     jsonify
 )
 from api import db
 import datetime
-import json
 
 
-from flask_restful import Resource, Api
+from flask_restful import Resource
 from flask_jwt_extended import create_access_token
-from api.mods.users.models.user_model import UserModel, user_schema
-from utils.errors import errors
+from mods.users.models.user_model import UserModel, user_schema
+from utils.errors import errors, error_handle
 from flask_bcrypt import check_password_hash
 from sqlalchemy.exc import IntegrityError
 
@@ -21,9 +19,9 @@ class SignupApi(Resource):
         try:
             if(request.json['email'] and request.json['phone'] and request.json['password']):
                 new_user = UserModel(
-                email=request.json['email'],
-                phone=request.json['phone'],
-                password=request.json['password']
+                    email=request.json['email'],
+                    phone=request.json['phone'],
+                    password=request.json['password']
                 )
                 db.session.add(new_user)
                 db.session.commit()
@@ -33,7 +31,8 @@ class SignupApi(Resource):
         except IntegrityError:
             return jsonify(errors["EmailAlreadyExistsError"])
         except Exception as e:
-            return jsonify(errors["InternalServerError"])
+            return error_handle(e)
+
 
 class LoginApi(Resource):
     def post(self):
@@ -45,7 +44,7 @@ class LoginApi(Resource):
                 elif request.json['phone']:
                     user = UserModel.query.filter_by(phone=request.json['phone']).first()
 
-                authorized = check_password_hash(user.password,request.json['password'])
+                authorized = check_password_hash(user.password, request.json['password'])
                 if not authorized:
                     return jsonify(errors["UnauthorizedError"])
 
@@ -55,7 +54,5 @@ class LoginApi(Resource):
             else:
                 return jsonify(errors["UnauthorizedError"])
 
-        # except UnauthorizedError:
-        #     return jsonify(errors["UnauthorizedError"])
         except Exception as e:
-            return jsonify(errors["InternalServerError"])
+            return error_handle(e)

@@ -1,7 +1,7 @@
 from flask.cli import FlaskGroup
 
 from api import app, db
-from api.mods.users.models.user_model import UserModel
+from mods.users.models.user_model import UserModel
 
 
 cli = FlaskGroup(app)

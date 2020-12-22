@@ -1,20 +1,15 @@
-import os
+from api import route
+from mods.users import (UserListResource, UserResource)
+from mods.auth import (SignupApi, LoginApi)
 
-from werkzeug.utils import secure_filename
-from flask import (
-    jsonify,
-    send_from_directory,
-    make_response,
-    request,
-    redirect,
-    url_for,
-    current_app
-)
-from api import app, route
-from api.mods.users import ( UserListResource, UserResource)
-from api.mods.auth import ( SignupApi, LoginApi)
+route.add_resource(UserListResource, '/users')
+route.add_resource(UserResource, '/user/<int:user_id>')
 
+route.add_resource(SignupApi, '/api/auth/signup')
+route.add_resource(LoginApi, '/api/auth/login')
 
+# route.add_resource(ForgotPassword, '/api/auth/forgot')
+# route.add_resource(ResetPassword, '/api/auth/reset')
 
 # @app.route("/")
 # def hello_world():
@@ -39,12 +34,3 @@ from api.mods.auth import ( SignupApi, LoginApi)
 #     <p><input type=file name=file><input type=submit value=Upload>
 #     </form>
 #     """
-
-route.add_resource(UserListResource, '/users')
-route.add_resource(UserResource, '/user/<int:user_id>')
-
-route.add_resource(SignupApi, '/api/auth/signup')
-route.add_resource(LoginApi, '/api/auth/login')
-
-# route.add_resource(ForgotPassword, '/api/auth/forgot')
-# route.add_resource(ResetPassword, '/api/auth/reset')
