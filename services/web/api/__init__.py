@@ -1,32 +1,38 @@
-import os
-
-from werkzeug.utils import secure_filename
 from flask import (
     Flask
 )
-from flask_sqlalchemy import SQLAlchemy
+from api.extensions import (
+    db,
+    ma,
+    migrate,
+    mail,
+    bcrypt,
+    jwt
+)
 from flask_restful import Api
-from flask_marshmallow import Marshmallow
-from flask_migrate import Migrate
-from flask_bcrypt import Bcrypt
-from flask_jwt_extended import JWTManager
-from flask_mail import Mail
-
 
 from utils.errors import errors
-
-app = Flask(__name__)
-app.config.from_object("api.config.Config")
-
-db = SQLAlchemy(app)
-route = Api(app, errors=errors)
-ma = Marshmallow(app)
-migrate = Migrate(app, db)
-
-mail = Mail(app)
-
-bcrypt = Bcrypt(app)
-jwt = JWTManager(app)
+from api.routes import load_routes
 
 
-from api import routes
+def create_app():
+    app = Flask(__name__)
+    app.config.from_object("api.config.Config")
+    register_plugins(app)
+    return app
+
+
+def register_plugins(app):
+    db.init_app(app)
+    route = Api(app, errors=errors)
+    ma.init_app(app)
+    migrate.init_app(app, db)
+
+    mail.init_app(app)
+
+    bcrypt.init_app(app)
+    jwt.init_app(app)
+    load_routes(route)
+
+
+app = create_app()

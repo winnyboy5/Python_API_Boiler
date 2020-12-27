@@ -2,7 +2,7 @@ from flask import (
     request,
     jsonify
 )
-from api import db
+from api.extensions import db
 import datetime
 
 
@@ -27,10 +27,13 @@ class SignupApi(Resource):
                 db.session.commit()
                 return user_schema.dump([new_user]), 200
             else:
+                db.session.rollback()
                 return jsonify(errors["SchemaValidationError"])
         except IntegrityError:
+            db.session.rollback()
             return jsonify(errors["EmailAlreadyExistsError"])
         except Exception as e:
+            db.session.rollback()
             return error_handle(e)
 
 

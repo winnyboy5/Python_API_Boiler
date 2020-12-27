@@ -1,6 +1,8 @@
 from flask.cli import FlaskGroup
 
-from api import app, db
+from api import app
+from api.extensions import db
+
 from mods.users.models.user_model import UserModel
 
 
