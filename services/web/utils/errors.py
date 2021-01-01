@@ -21,6 +21,10 @@ errors = {
         "message": "Couldn't find the user with given email address",
         "status": 400
     },
+    "ExpiredTokenError": {
+        "message": "Expired token",
+        "status": 403
+    },
     "BadTokenError": {
         "message": "Invalid token",
         "status": 403
@@ -33,4 +37,6 @@ def error_handle(e):
     if(current_app.config['DEBUG']):
         raise e
     else:
+        print(current_app.config['DEBUG'])
+        raise e
         return jsonify(errors["InternalServerError"])

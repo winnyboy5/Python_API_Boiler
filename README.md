@@ -19,8 +19,16 @@ Uses gunicorn + nginx.
 
 Use .env.prod-sample to .env.prod and .env.prod.db-sample to .env.prod.db. Update the environment variables.
 
-Build the images and run the containers:
+Build the images and run the containers & the DB migration:
 
 $ docker-compose -f docker-compose.prod.yml up -d --build
+
+$ docker-compose -f docker-compose.prod.yml exec web flask db init
+
+$ docker-compose -f docker-compose.prod.yml exec web flask db stamp head
+
+$ docker-compose -f docker-compose.prod.yml exec web flask db migrate
+
+$ docker-compose -f docker-compose.prod.yml exec web flask db update
 
 Test it out at http://localhost:1337. No mounted folders. To apply changes, the image must be re-built.

@@ -1,16 +1,17 @@
-from mods.users import (UserListResource, UserResource)
-from mods.auth import (SignupApi, LoginApi)
+from mods.users import (UserResource)
+from mods.auth import (SignupApi, LoginApi, ForgotPassword, ResetPassword)
 
 
 def load_routes(route):
-    route.add_resource(UserListResource, '/users')
+    
+    route.add_resource(SignupApi, '/auth/signup')
+    route.add_resource(LoginApi, '/auth/login')
+
+    route.add_resource(ForgotPassword, '/auth/forgot')
+    route.add_resource(ResetPassword, '/auth/reset')
+
     route.add_resource(UserResource, '/user/<int:user_id>')
 
-    route.add_resource(SignupApi, '/api/auth/signup')
-    route.add_resource(LoginApi, '/api/auth/login')
-
-    # route.add_resource(ForgotPassword, '/api/auth/forgot')
-    # route.add_resource(ResetPassword, '/api/auth/reset')
     return route
 
 # @app.route("/")

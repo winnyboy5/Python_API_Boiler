@@ -3,7 +3,7 @@ from sqlalchemy.ext.declarative import declared_attr
 
 
 class TimestampMixin(object):
-    
+
     id = Column(Integer, primary_key=True)
 
     @declared_attr
