@@ -1,6 +1,5 @@
 from api.extensions import db, ma
 from utils.db_utils import TimestampMixin
-# from flask_bcrypt import generate_password_hash, check_password_hash
 
 
 class UserModel(db.Model, TimestampMixin):
@@ -13,9 +12,6 @@ class UserModel(db.Model, TimestampMixin):
 
     def __init__(self, **kwargs):
         super(UserModel, self).__init__(**kwargs)
-
-    # def check_password(self, password):
-    #     return check_password_hash(self.password, password)
 
 
 class UserSchema(ma.Schema):

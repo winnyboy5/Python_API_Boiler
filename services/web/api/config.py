@@ -1,5 +1,5 @@
 import os
-
+from utils.converters import str_to_bool
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
@@ -14,5 +14,7 @@ class Config(object):
     MAIL_PORT = os.getenv("MAIL_PORT")
     MAIL_USERNAME = os.getenv("MAIL_USERNAME")
     MAIL_PASSWORD = os.getenv("MAIL_PASSWORD")
-    MAIL_USE_TLS = os.getenv("MAIL_USE_TLS")
-    MAIL_USE_SSL = os.getenv("MAIL_USE_SSL")
+    MAIL_USE_TLS = str_to_bool(os.getenv("MAIL_USE_TLS"))
+    MAIL_USE_SSL = str_to_bool(os.getenv("MAIL_USE_SSL"))
+
+    

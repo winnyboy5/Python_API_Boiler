@@ -25,7 +25,7 @@ class SignupApi(Resource):
                 new_user = UserModel(
                     email=request.json['email'],
                     phone=request.json['phone'],
-                    password=request.json['password']
+                    password=generate_password_hash(request.json['password']).decode('utf8')
                 )
                 db.session.add(new_user)
                 db.session.commit()
@@ -109,7 +109,7 @@ class ResetPassword(Resource):
             user.password = generate_password_hash(password).decode('utf8')
             db.session.commit()
 
-            return send_email('[Movie-bag] Password reset successful',
+            return send_email('Password reset successful',
                               sender='support@movie-bag.com',
                               recipients=[user.email],
                               text_body='Password reset was successful',
